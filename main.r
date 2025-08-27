@@ -85,6 +85,7 @@ colores <- c("Azul","Verde","Rojo","Azul","Azul","Verde")
 barplot(table(colores), main="Colores preferidos", col=c("blue","green","red"))
 
 # Diagrama de caja (boxplot)
+
 boxplot(notas, main="Boxplot de notas", col="orange")
 
 # ===============================
@@ -106,6 +107,14 @@ mean(simulacion %in% evento)  # frecuencia relativa
 
 # ===============================
 # 6. Probabilidad Condicional
+# OPERACIONES ENTRE EVENTOS
+# 🔹 Complemento: P(Aᶜ) = 1 - P(A)
+# 🔹 Unión:       P(A ∪ B) = P(A) + P(B) - P(A ∩ B)
+# 🔹 Intersección:
+#       * Si A y B son independientes → P(A ∩ B) = P(A) * P(B)
+# 🔹 Probabilidad condicional: 
+#       P(A|B) = P(A ∩ B) / P(B)
+
 # ===============================
 # Ejemplo: baraja simplificada (palos y colores)
 cartas <- data.frame(
@@ -124,7 +133,12 @@ p_rojo
 p_cond
 
 # ===============================
-# 7. Teorema de Bayes
+# 7. Teorema de Bayes TEOREMA DE LA PROBABILIDAD TOTAL
+###############################################################
+# Si {B1, B2, ..., Bn} es una partición del espacio muestral S:
+#
+# 📌 P(A) = P(A ∩ B1) + P(A ∩ B2) + ... + P(A ∩ Bn)
+#        = P(B1)P(A|B1) + P(B2)P(A|B2) + ... + P(Bn)P(A|Bn)
 # ===============================
 # Ejemplo: test de enfermedad
 # P(Enfermedad) = 0.01
