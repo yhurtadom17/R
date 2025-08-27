@@ -1,141 +1,133 @@
 ###############################################
-# 📊 Resumen en R para resolver ejercicios de Estadística
-# Incluye: Estadística descriptiva, frecuencias, gráficos, probabilidad e inferencia
+# 📊 RESUMEN DE ESTADÍSTICA EN R (DOCUMENTADO)
+# Incluye teoría para resolver ejercicios
+# sin necesidad de ejecutar cálculos
 ###############################################
 
 # ===============================
-# 1. Cargar datos
+# 1. Estadística Descriptiva
 # ===============================
-# Normalmente trabajamos con vectores o data.frames.
-# Ejemplo: notas de un examen
-notas <- c(3.5, 4.0, 2.8, 3.7, 4.5, 2.9, 3.3, 3.8, 4.0, 3.2)
-
-# ===============================
-# 2. Medidas de Tendencia Central y Dispersión
-# ===============================
-# Media
-mean(notas)
-
-# Mediana
-median(notas)
-
-# Moda (no existe función nativa, se define)
-moda <- function(x){
-  ux <- unique(x)
-  ux[which.max(tabulate(match(x, ux)))]
-}
-moda(notas)
-
-# Rango
-range(notas)
-diff(range(notas))  # valor máximo - mínimo
-
-# Cuartiles
-quantile(notas)
-
-# Rango intercuartílico (IQR)
-IQR(notas)
-
-# Varianza y Desviación Estándar
-var(notas)
-sd(notas)
+# La estadística descriptiva organiza y resume datos.
+# Medidas:
+# - MEDIA: promedio de los datos.
+# - MEDIANA: valor central al ordenar los datos.
+# - MODA: valor que más se repite.
+# - RANGO: diferencia entre el mayor y menor valor.
+# - CUARTILES: dividen en 4 partes (Q1, Q2, Q3).
+# - PERCENTILES: dividen en 100 partes.
+# - IQR (rango intercuartílico): Q3 - Q1.
+# - VARIANZA: dispersión cuadrática.
+# - DESVIACIÓN ESTÁNDAR: raíz de la varianza.
+# - COEFICIENTE DE VARIACIÓN: CV = (σ / media).
 
 # ===============================
-# 3. Tablas de Frecuencia
+# 2. Tablas de Frecuencia
 # ===============================
-# Frecuencia absoluta
-tabla_abs <- table(notas)
-tabla_abs
-
-# Frecuencia relativa
-tabla_rel <- prop.table(tabla_abs)
-tabla_rel
-
-# Frecuencia acumulada
-tabla_acum <- cumsum(tabla_abs)
-tabla_acum
+# - FRECUENCIA ABSOLUTA (FA): cuántas veces aparece un valor.
+# - FRECUENCIA RELATIVA (FR): proporción respecto al total.
+# - FRECUENCIA ACUMULADA (FAC): suma progresiva de las frecuencias.
 
 # ===============================
-# 4. Visualización de Datos
+# 3. Visualización de Datos
 # ===============================
-# Histograma
-hist(notas, main="Histograma de notas", xlab="Notas", col="lightblue", freq=TRUE)
-
-# Gráfico de barras (para cualitativas)
-colores <- c("Azul","Verde","Rojo","Azul","Azul","Verde")
-barplot(table(colores), main="Colores preferidos", col=c("blue","green","red"))
-
-# Diagrama de caja (boxplot)
-boxplot(notas, main="Boxplot de notas", col="orange")
+# - HISTOGRAMA: muestra la distribución de una variable numérica.
+# - BARRAS: para variables cualitativas.
+# - BOXPLOT: muestra mediana, cuartiles y outliers.
+#   ✔ Caja = Q1 a Q3
+#   ✔ Línea central = mediana
+#   ✔ Bigotes = valores extremos sin ser atípicos
+#   ✔ Puntos fuera = outliers
 
 # ===============================
-# 5. Probabilidad y Experimentos Aleatorios
+# 4. Probabilidad
 # ===============================
-# Definición de un espacio muestral
-# Ejemplo: lanzamiento de un dado
-espacio_muestral <- 1:6
-
-# Probabilidad clásica de sacar un número par
-evento <- c(2,4,6)
-p_evento <- length(evento) / length(espacio_muestral)
-p_evento
-
-# Probabilidad mediante simulación (frecuencia relativa)
-set.seed(123) # para reproducibilidad
-simulacion <- sample(espacio_muestral, size=10000, replace=TRUE)
-mean(simulacion %in% evento)  # frecuencia relativa
+# - ESPACIO MUESTRAL (Ω): conjunto de todos los resultados posibles.
+# - PROBABILIDAD CLÁSICA: P(E) = casos favorables / casos posibles.
+# - PROBABILIDAD EMPÍRICA: se calcula con experimentos o simulación.
 
 # ===============================
-# 6. Probabilidad Condicional
+# 5. Probabilidad Condicional
 # ===============================
-# Ejemplo: baraja simplificada (palos y colores)
-cartas <- data.frame(
-  valor = rep(1:13, 4),
-  palo = rep(c("Corazones","Diamantes","Tréboles","Picas"), each=13),
-  color = rep(c("Rojo","Rojo","Negro","Negro"), each=13)
-)
-
-# Probabilidad de que salga una carta roja (P(Rojo))
-p_rojo <- nrow(subset(cartas, color=="Rojo")) / nrow(cartas)
-
-# Probabilidad de que sea un corazón dado que es rojo (P(Corazones | Rojo))
-p_cond <- nrow(subset(cartas, palo=="Corazones")) / nrow(subset(cartas, color=="Rojo"))
-
-p_rojo
-p_cond
+# Fórmula: 
+#   P(A|B) = P(A ∩ B) / P(B)
+# ✔ Se interpreta como la probabilidad de que ocurra A dado que ocurrió B.
 
 # ===============================
-# 7. Teorema de Bayes
+# 6. Teorema de la Probabilidad Total
 # ===============================
-# Ejemplo: test de enfermedad
-# P(Enfermedad) = 0.01
-# P(Positivo | Enfermedad) = 0.95
-# P(Positivo | No Enfermedad) = 0.05
-
-p_enf <- 0.01
-p_no_enf <- 0.99
-p_pos_dado_enf <- 0.95
-p_pos_dado_no_enf <- 0.05
-
-# Probabilidad total de positivo
-p_pos <- p_pos_dado_enf*p_enf + p_pos_dado_no_enf*p_no_enf
-
-# Bayes: P(Enfermedad | Positivo)
-p_enf_dado_pos <- (p_pos_dado_enf*p_enf) / p_pos
-p_enf_dado_pos
+# Cuando un evento puede ocurrir por varias causas mutuamente excluyentes:
+#
+# Fórmula general:
+#   P(A) = P(A|B1)P(B1) + P(A|B2)P(B2) + ... + P(A|Bn)P(Bn)
+#
+# ✔ Clave: se usa cuando el espacio se divide en escenarios (partición).
 
 # ===============================
-# 8. Inferencia Estadística (Estimación de Intervalos)
+# 7. Teorema de Valles (o Bayes)
 # ===============================
-# Intervalo de confianza para la media
-t.test(notas, conf.level=0.95)  # asumiendo normalidad
+# Permite "invertir" probabilidades condicionales, es decir,
+# calcular la probabilidad de una causa dado un efecto.
+#
+# Fórmula general:
+#   P(Bi|A) = [ P(A|Bi) * P(Bi) ] / Σ [ P(A|Bj) * P(Bj) ]
+#
+# Donde:
+# - Bi: cada posible causa (partición del espacio).
+# - A: el evento observado.
+# - P(Bi): probabilidad previa de la causa.
+# - P(A|Bi): probabilidad de observar A si ocurrió Bi.
+# - El denominador: probabilidad total de A (teorema de probabilidad total).
+#
+# ✔ Clave:
+# - Numerador: peso del escenario Bi en el evento A.
+# - Denominador: normaliza la suma de todas las causas posibles.
+#
+# Ejemplo conceptual:
+#   • Una prueba médica: queremos P(Enfermedad|Positivo).
+#   • Se usa Bayes para actualizar el riesgo sabiendo el resultado del test.
 
 # ===============================
-# 9. Técnicas de Conteo
+# 8. Técnicas de Conteo
 # ===============================
-# Ejemplo con combinaciones y permutaciones
-# Número de formas de elegir 3 estudiantes entre 10
-choose(10, 3)
+# - PERMUTACIONES: número de formas de ordenar elementos.
+#   Fórmula: P(n,k) = n! / (n-k)!
+# - COMBINACIONES: elegir sin importar el orden.
+#   Fórmula: C(n,k) = n! / [k!(n-k)!]
+# ✔ Orden importa → Permutación.
+# ✔ Orden no importa → Combinación.
 
-# Permutaciones de 5 objetos en 3 posiciones
-factorial(5) / factorial(5-3)
+# ===============================
+# 9. Inferencia Estadística
+# ===============================
+# Se basa en usar muestras para sacar conclusiones sobre la población.
+# - INTERVALOS DE CONFIANZA (IC): rango donde probablemente esté el parámetro.
+# - Ejemplo: un IC del 95% para la media indica un 95% de confianza
+#   en que la media poblacional esté en ese rango.
+# ✔ IC estrecho → más precisión.
+
+# ===============================
+# 10. Conceptos Extras
+# ===============================
+# - RANGO DE VARIACIÓN: valor máximo - valor mínimo.
+# - MARCA DE CLASE: punto medio de cada intervalo en tablas agrupadas.
+# - CINCO NÚMEROS DE TUKEY: mínimo, Q1, mediana, Q3, máximo.
+# - OUTLIERS: valores fuera de [Q1 - 1.5*IQR, Q3 + 1.5*IQR].
+
+# ===============================
+# 🔑 Claves Generales para Resolver Ejercicios
+# ===============================
+# 1. Identificar tipo de variable (cualitativa o cuantitativa).
+# 2. Usar medidas de centralización y dispersión adecuadas.
+# 3. Graficar datos → ayuda a detectar patrones y outliers.
+# 4. Probabilidades:
+#    - Usar clásica o empírica según corresponda.
+#    - Condicional: restringir al evento dado.
+#    - Total: cuando hay varios escenarios.
+#    - Valles (Bayes): cuando piden probabilidad "inversa".
+# 5. Técnicas de conteo → diferenciar si el orden importa o no.
+# 6. Inferencia → comprobar nivel de confianza y supuestos de normalidad.
+
+###############################################
+# Con este resumen tienes la teoría completa,
+# incluyendo el Teorema de Valles (Bayes).
+###############################################
