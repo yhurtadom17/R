@@ -30,8 +30,14 @@ moda(notas)
 range(notas)
 diff(range(notas))  # valor máximo - mínimo
 
-# Cuartiles
+# Cuartiles y cuantiles específicos
 quantile(notas)
+# Percentiles 10%, 50% y 90%
+quantile(notas, probs = c(0.1, 0.5, 0.9))
+# Todos los percentiles
+quantile(notas, probs = seq(0, 1, 0.1))
+# Cuartiles
+quantile(x, probs = c(0, 0.25, 0.5, 0.75, 1))
 
 # Rango intercuartílico (IQR)
 IQR(notas)
@@ -39,6 +45,15 @@ IQR(notas)
 # Varianza y Desviación Estándar
 var(notas)
 sd(notas)
+
+# Coeficiente de variación
+coef_v <- desv_estandar/media
+
+# Funciones básicas de resumen general
+
+summary(x) # → resumen general (mínimo, cuartiles, mediana, media, máximo).
+
+fivenum(x) # → cinco números de Tukey (mínimo, Q1, mediana, Q3, máximo).
 
 # ===============================
 # 3. Tablas de Frecuencia
@@ -60,6 +75,10 @@ tabla_acum
 # ===============================
 # Histograma
 hist(notas, main="Histograma de notas", xlab="Notas", col="lightblue", freq=TRUE)
+
+# Histograma con clases en R
+hist(datos, breaks = "sturges", plot = FALSE)
+# otros breaks: breaks = "scott", breaks = "fd" (freedman-diaconis)
 
 # Gráfico de barras (para cualitativas)
 colores <- c("Azul","Verde","Rojo","Azul","Azul","Verde")
@@ -139,3 +158,67 @@ choose(10, 3)
 
 # Permutaciones de 5 objetos en 3 posiciones
 factorial(5) / factorial(5-3)
+
+# ===========================================
+# 10. Teorema de Probabilidad Total
+# P(A) = P(A|B1) * P(B1) + P(A|B2) * P(B2) + ... + P(A|Bn) * P(Bn), donde "n" es el número de escenarios en la partición
+# ==========================================
+# Ejemplo en R
+# Supongamos que una fábrica tiene dos máquinas:
+##############################################
+# PROBLEMA 1: MÁQUINAS Y PRODUCTOS DEFECTUOSOS
+##############################################
+# Una fábrica tiene dos máquinas:
+# - La máquina 1 produce el 60% de los productos (P(B1) = 0.6).
+#   Tiene un 2% de defectuosos (P(D|B1) = 0.02).
+# - La máquina 2 produce el 40% de los productos (P(B2) = 0.4).
+#   Tiene un 5% de defectuosos (P(D|B2) = 0.05).
+#
+# Usando el teorema de la probabilidad total:
+# P(D) = P(D|B1)*P(B1) + P(D|B2)*P(B2)
+#
+# Además, se quiere calcular con Bayes:
+# P(B1|D) = (P(D|B1)*P(B1)) / P(D)
+
+# Probabilidades
+P_B1 <- 0.6
+P_B2 <- 0.4
+P_D_given_B1 <- 0.02
+P_D_given_B2 <- 0.05
+
+# Teorema de probabilidad total
+P_D <- P_D_given_B1 * P_B1 + P_D_given_B2 * P_B2
+
+# Bayes: probabilidad de que el producto defectuoso venga de la máquina 1
+P_B1_given_D <- (P_D_given_B1 * P_B1) / P_D
+
+
+##############################################
+# PROBLEMA 2: HOMBRES Y MUJERES FUMADORES
+##############################################
+# En una población:
+# - El 48% son hombres (P(H) = 0.48)
+# - El 52% son mujeres (P(M) = 0.52)
+#
+# Prevalencia de tabaquismo:
+# - 25% de los hombres fuman (P(F|H) = 0.25)
+# - 18% de las mujeres fuman (P(F|M) = 0.18)
+#
+# Usando el teorema de la probabilidad total:
+# P(F) = P(F|H)*P(H) + P(F|M)*P(M)
+#
+# También se pide con Bayes:
+# P(H|F) = (P(F|H)*P(H)) / P(F)
+
+# Probabilidades
+P_H <- 0.48
+P_M <- 0.52
+P_F_given_H <- 0.25
+P_F_given_M <- 0.18
+
+# Teorema de probabilidad total
+P_F <- P_F_given_H * P_H + P_F_given_M * P_M
+
+# Bayes: probabilidad de que un fumador sea hombre
+P_H_given_F <- (P_F_given_H * P_H) / P_F
+# ==========================================
