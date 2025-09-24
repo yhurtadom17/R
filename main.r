@@ -1,24 +1,107 @@
-# Instalar la librería si no la tienes
-# install.packages("gemini.R")
+1. Introduction to Probability
 
-# Cargar la librería
-library(gemini.R)
+R doesn’t have “basic probability” functions directly, but you can:
 
-# Asigna tu clave API a una variable de entorno
-Sys.setenv(GEMINI_API_KEY = "AIzaSyBjFAvEl2f8KolPsJwr2Z1ES_nqXLwSEDc")
+Combinatorics
 
-# Opcional: Verifica que la clave se ha guardado correctamente
-Sys.getenv("GEMINI_API_KEY")
+# n choose k
+choose(n, k)
 
-# Definir el mensaje a enviar
-message <- "En un restaurante de comida rápida el 75% de los pedidos se sirve con exactitud. El número de pedidos servidos con exactitud puede modelarse como una variable aleatoria binomial. Si usted va con cuatro amigos más, ¿Cuál es la probabilidad de que entre 1 y 4 pedidos inclusive se sirvan con exactitud?"
 
-# Enviar la consulta a la API de Gemini
-response <- gemini.R::gemini(message)
+Conditional probability (manual)
 
-# Imprimir la respuesta
-print(response)
+P_A <- 0.4
+P_B <- 0.5
+P_A_and_B <- 0.2
+P_A_given_B <- P_A_and_B / P_B
 
-# Opcional: Acceder al texto de la respuesta
-respuesta_generada <- response$content
-print(respuesta_generada)
+
+Complement rule
+
+P_Ac <- 1 - P_A
+
+2. Discrete Probability Distributions
+Binomial
+
+Probability mass function (PMF):
+
+dbinom(k, size=n, prob=p)
+
+
+Cumulative probability (CDF):
+
+pbinom(k, size=n, prob=p)   # P(X ≤ k)
+1 - pbinom(k, size=n, prob=p)   # P(X > k)
+
+
+Random sample (simulation):
+
+rbinom(10, size=n, prob=p)
+
+
+Example: 
+𝑃(𝑋=2)
+P(X=2) when n=5, p=0.4
+
+dbinom(2, size=5, prob=0.4)
+
+Poisson
+
+PMF:
+
+dpois(k, lambda=λ)
+
+
+CDF:
+
+ppois(k, lambda=λ)   # P(X ≤ k)
+1 - ppois(k, lambda=λ)   # P(X > k)
+
+
+Random sample:
+
+rpois(10, lambda=λ)
+
+
+Example: 
+𝑃(𝑋=3)
+P(X=3) when λ=4
+
+dpois(3, lambda=4)
+
+3. Uniform Distribution (Continuous)
+Uniform Distribution Functions
+
+PDF (density):
+
+dunif(x, min=a, max=b)
+
+
+CDF:
+
+punif(x, min=a, max=b)   # P(X ≤ x)
+1 - punif(x, min=a, max=b)   # P(X > x)
+
+
+Probability between values:
+
+punif(d, min=a, max=b) - punif(c, min=a, max=b)   # P(c ≤ X ≤ d)
+
+
+Random sample:
+
+runif(10, min=a, max=b)
+
+
+Example: Uniform(6,10)
+
+# Mean and variance (manual)
+mean <- (6+10)/2
+variance <- (10-6)^2 / 12
+sd <- sqrt(variance)
+
+# P(X > 7)
+1 - punif(7, min=6, max=10)
+
+# P(7 ≤ X ≤ 9)
+punif(9, min=6, max=10) - punif(7, min=6, max=10)
