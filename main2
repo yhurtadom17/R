@@ -1,0 +1,108 @@
+---
+title: "repaso_parcial2"
+output: html_document
+date: "2025-09-24"
+---
+
+### Punto 1
+```{r}
+a <- 20   # límite inferior
+b <- 25   # límite superior
+x <- 22   # valor donde queremos la probabilidad
+
+# P(X < 22)
+prob <- punif(x, min = a, max = b)
+prob
+```
+### Punto 2
+```{r}
+a <- 1
+b <- 5
+# calcular E[Y^2] por integración
+Ey2 <- (1/(b - a)) * integrate(function(y) y^2, lower = a, upper = b)$value
+Ey2  # debe ser 31/3 ≈ 10.33333
+
+# Expectation of cost (symbolic c0,c1; use numeric example)
+c0 <- 100   # ejemplo
+c1 <- 2     # ejemplo
+E_C <- c0 + c1 * Ey2
+E_C
+
+```
+### Punto 4
+```{r}
+# Parámetros
+n <- 6
+p <- 0.7
+k <- 3
+
+# Probabilidad P(X <= 3)
+prob <- pbinom(k, size = n, prob = p)
+prob 
+
+```
+
+### Punto 5
+```{r}
+n <- 5
+p <- 0.75
+
+# Probabilidad de 1 a 4 pedidos exactos
+prob <- sum(dbinom(1:4, size = n, prob = p))
+prob
+
+```
+
+### Punto 7
+# Cálculo del valor esperado de T
+
+## Datos iniciales
+Se tienen tres variables aleatorias \(X, Y, Z\) con las siguientes propiedades:
+
+- \(E[X] = 12\)  
+- \(E[Y] = 6\)  
+- \(Z = \tfrac{1}{2}X + Y\)  
+
+Además, se define una nueva variable aleatoria:
+
+\[
+T = \tfrac{1}{3}(X + Y + Z)
+\]
+
+---
+
+## Paso 1: Calcular \(E[Z]\)
+
+\[
+E[Z] = E\left(\tfrac{1}{2}X + Y\right) 
+= \tfrac{1}{2}E[X] + E[Y] 
+= \tfrac{1}{2}(12) + 6 
+= 6 + 6 
+= 12
+\]
+
+---
+
+## Paso 2: Calcular \(E[T]\)
+
+\[
+E[T] = E\left(\tfrac{1}{3}(X + Y + Z)\right) 
+= \tfrac{1}{3}\big(E[X] + E[Y] + E[Z]\big)
+\]
+
+Sustituyendo los valores:
+
+\[
+E[T] = \tfrac{1}{3}(12 + 6 + 12) 
+= \tfrac{1}{3}(30) 
+= 10
+\]
+
+---
+
+## Respuesta final
+\[
+E[T] = 10
+\]
+
+### Punto 8
