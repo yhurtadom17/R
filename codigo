@@ -1,133 +1,167 @@
-###############################################
-# 📊 RESUMEN DE ESTADÍSTICA EN R (DOCUMENTADO)
-# Incluye teoría para resolver ejercicios
-# sin necesidad de ejecutar cálculos
-###############################################
+Semana 6: Variables Aleatorias (V.A.), Valor Esperado y Varianza
+Conceptos Clave
+• Variable Aleatoria (V.A.): Función que transforma un experimento aleatorio en un número real. Se denotan con mayúsculas (X, Y) y valores en minúsculas (x, y).
+• Recorrido (o Soporte): Conjunto de todos los valores posibles que puede tomar la V.A. (R_x).
+  - V.A. Discreta: Recorrido finito o infinito numerable.
+  - V.A. Continua: Recorrido en un intervalo de números reales.
+• Función de Masa de Probabilidad (FMP): Para v.a. discreta X → f(x) = P(X = x). Debe cumplir f(x) ≥ 0 y Σ f(x) = 1.
+• Función de Densidad de Probabilidad (FDP): Para v.a. continua X → f(x). Debe cumplir f(x) ≥ 0 y ∫ f(x) dx = 1.
+Fórmulas
+• Valor Esperado (E[X]):
+   - Discreta:   E(X) = Σ (x ⋅ f(x))
+   - Continua:   E(X) = ∫ x ⋅ f(x) dx
+• Varianza (Var[X]): Var(X) = E[(X − E(X))^2] = E(X^2) − [E(X)]^2
+Código en R
 
-# ===============================
-# 1. Estadística Descriptiva
-# ===============================
-# La estadística descriptiva organiza y resume datos.
-# Medidas:
-# - MEDIA: promedio de los datos.
-# - MEDIANA: valor central al ordenar los datos.
-# - MODA: valor que más se repite.
-# - RANGO: diferencia entre el mayor y menor valor.
-# - CUARTILES: dividen en 4 partes (Q1, Q2, Q3).
-# - PERCENTILES: dividen en 100 partes.
-# - IQR (rango intercuartílico): Q3 - Q1.
-# - VARIANZA: dispersión cuadrática.
-# - DESVIACIÓN ESTÁNDAR: raíz de la varianza.
-# - COEFICIENTE DE VARIACIÓN: CV = (σ / media).
+# Ejemplo: Para f(x) = 0.075x + 0.2 si 3 ≤ x ≤ 5, calcular P(3 ≤ X ≤ 4)
+f <- function(x) { 0.075 * x + 0.2 }
+probabilidad <- integrate(f, lower = 3, upper = 4)
+print(probabilidad$value)
+👉 Trucos: Siempre verificar que la integral de la FDP en todo el dominio sea igual a 1.
+Semana 7: Distribuciones Discretas
+Conceptos Clave
+• Bernoulli: Modela un ensayo con dos resultados (éxito/fracaso).
+• Binomial: Número de éxitos en n ensayos de Bernoulli.
+• Poisson: Número de eventos en un intervalo de tiempo/espacio.
+Fórmulas
+• Bernoulli: f(x) = p^x (1-p)^(1-x),  E(X)=p,  Var(X)=p(1-p)
+• Binomial: f(x) = (nCx) p^x (1-p)^(n-x),  E(X)=np,  Var(X)=np(1-p)
+• Poisson: f(x) = (λ^x e^(−λ)) / x!,  E(X)=λ,  Var(X)=λ
 
-# ===============================
-# 2. Tablas de Frecuencia
-# ===============================
-# - FRECUENCIA ABSOLUTA (FA): cuántas veces aparece un valor.
-# - FRECUENCIA RELATIVA (FR): proporción respecto al total.
-# - FRECUENCIA ACUMULADA (FAC): suma progresiva de las frecuencias.
 
-# ===============================
-# 3. Visualización de Datos
-# ===============================
-# - HISTOGRAMA: muestra la distribución de una variable numérica.
-# - BARRAS: para variables cualitativas.
-# - BOXPLOT: muestra mediana, cuartiles y outliers.
-#   ✔ Caja = Q1 a Q3
-#   ✔ Línea central = mediana
-#   ✔ Bigotes = valores extremos sin ser atípicos
-#   ✔ Puntos fuera = outliers
+Ejemplo Resuelto (Binomial)
 
-# ===============================
-# 4. Probabilidad
-# ===============================
-# - ESPACIO MUESTRAL (Ω): conjunto de todos los resultados posibles.
-# - PROBABILIDAD CLÁSICA: P(E) = casos favorables / casos posibles.
-# - PROBABILIDAD EMPÍRICA: se calcula con experimentos o simulación.
+📌 Problema: La probabilidad de que un estudiante termine la carrera es p = 0.3.
+Se matriculan n = 7. Calcular:
 
-# ===============================
-# 5. Probabilidad Condicional
-# ===============================
-# Fórmula: 
-#   P(A|B) = P(A ∩ B) / P(B)
-# ✔ Se interpreta como la probabilidad de que ocurra A dado que ocurrió B.
+La probabilidad de que todos terminen.
 
-# ===============================
-# 6. Teorema de la Probabilidad Total
-# ===============================
-# Cuando un evento puede ocurrir por varias causas mutuamente excluyentes:
-#
-# Fórmula general:
-#   P(A) = P(A|B1)P(B1) + P(A|B2)P(B2) + ... + P(A|Bn)P(Bn)
-#
-# ✔ Clave: se usa cuando el espacio se divide en escenarios (partición).
+La probabilidad de que al menos 2 terminen.
 
-# ===============================
-# 7. Teorema de Valles (o Bayes)
-# ===============================
-# Permite "invertir" probabilidades condicionales, es decir,
-# calcular la probabilidad de una causa dado un efecto.
-#
-# Fórmula general:
-#   P(Bi|A) = [ P(A|Bi) * P(Bi) ] / Σ [ P(A|Bj) * P(Bj) ]
-#
-# Donde:
-# - Bi: cada posible causa (partición del espacio).
-# - A: el evento observado.
-# - P(Bi): probabilidad previa de la causa.
-# - P(A|Bi): probabilidad de observar A si ocurrió Bi.
-# - El denominador: probabilidad total de A (teorema de probabilidad total).
-#
-# ✔ Clave:
-# - Numerador: peso del escenario Bi en el evento A.
-# - Denominador: normaliza la suma de todas las causas posibles.
-#
-# Ejemplo conceptual:
-#   • Una prueba médica: queremos P(Enfermedad|Positivo).
-#   • Se usa Bayes para actualizar el riesgo sabiendo el resultado del test.
+✅ Planteamiento:
 
-# ===============================
-# 8. Técnicas de Conteo
-# ===============================
-# - PERMUTACIONES: número de formas de ordenar elementos.
-#   Fórmula: P(n,k) = n! / (n-k)!
-# - COMBINACIONES: elegir sin importar el orden.
-#   Fórmula: C(n,k) = n! / [k!(n-k)!]
-# ✔ Orden importa → Permutación.
-# ✔ Orden no importa → Combinación.
+Caso 1: P(X=7)
 
-# ===============================
-# 9. Inferencia Estadística
-# ===============================
-# Se basa en usar muestras para sacar conclusiones sobre la población.
-# - INTERVALOS DE CONFIANZA (IC): rango donde probablemente esté el parámetro.
-# - Ejemplo: un IC del 95% para la media indica un 95% de confianza
-#   en que la media poblacional esté en ese rango.
-# ✔ IC estrecho → más precisión.
+Caso 2: P(X≥2) = 1 − P(X≤1)
 
-# ===============================
-# 10. Conceptos Extras
-# ===============================
-# - RANGO DE VARIACIÓN: valor máximo - valor mínimo.
-# - MARCA DE CLASE: punto medio de cada intervalo en tablas agrupadas.
-# - CINCO NÚMEROS DE TUKEY: mínimo, Q1, mediana, Q3, máximo.
-# - OUTLIERS: valores fuera de [Q1 - 1.5*IQR, Q3 + 1.5*IQR].
+✅ Resolución manual:
 
-# ===============================
-# 🔑 Claves Generales para Resolver Ejercicios
-# ===============================
-# 1. Identificar tipo de variable (cualitativa o cuantitativa).
-# 2. Usar medidas de centralización y dispersión adecuadas.
-# 3. Graficar datos → ayuda a detectar patrones y outliers.
-# 4. Probabilidades:
-#    - Usar clásica o empírica según corresponda.
-#    - Condicional: restringir al evento dado.
-#    - Total: cuando hay varios escenarios.
-#    - Valles (Bayes): cuando piden probabilidad "inversa".
-# 5. Técnicas de conteo → diferenciar si el orden importa o no.
-# 6. Inferencia → comprobar nivel de confianza y supuestos de normalidad.
+P(X=7) = (7C7)(0.3^7)(0.7^0) = 0.0002187
 
-###############################################
-# Con este resumen tienes la teoría completa,
-# incluyendo el Teorema de Valles (Bayes).
-###############################################
+P(X≤1) = P(X=0) + P(X=1) = (7C0)(0.3^0)(0.7^7) + (7C1)(0.3^1)(0.7^6)
+= 0.0823543 + 0.247063 = 0.329417
+
+P(X≥2) = 1 − 0.329417 = 0.670583
+👉 Trucos: Para calcular 'al menos', se usa el complemento: P(X ≥ k) = 1 − P(X ≤ k−1).
+✅ Código en R:
+
+n <- 7; p <- 0.3
+prob_todos <- dbinom(7, size=n, prob=p)
+prob_al_menos_2 <- 1 - pbinom(1, size=n, prob=p)
+
+print(prob_todos)
+print(prob_al_menos_2)
+
+👉 Truco: En binomial, cuando p es muy pequeña y n muy grande, se aproxima con Poisson: X ~ Poisson(λ = np).
+
+Semana 8: Distribuciones Continuas
+Conceptos Clave
+• Uniforme Continua: Todos los valores en [a,b] tienen igual probabilidad.
+• Exponencial: Tiempo entre eventos de Poisson.
+
+• Normal: Distribución en forma de campana, caracterizada por μ y σ².
+Fórmulas
+
+• Uniforme: f(x)=1/(b−a),  E(X)=(a+b)/2,  Var(X)=(b−a)^2/12
+
+• Exponencial: f(x)=λe^(−λx),  E(X)=1/λ,  Var(X)=1/λ^2
+
+• Normal: f(x)=(1/(√(2πσ^2))) e^(−(x−μ)^2 / (2σ^2)),  X~N(μ,σ^2)
+
+Ejemplo Resuelto (Normal)
+
+📌 Problema: El ancho de rollos de tela sigue una distribución normal con media μ=950 mm y desviación estándar σ=10 mm. Calcular:
+
+P(947 ≤ X ≤ 958)
+
+El valor C tal que P(X < C) = 0.8531
+
+✅ Planteamiento:
+
+Normal(950, 10^2).
+
+Se usan probabilidades acumuladas con pnorm.
+
+✅ Resolución manual (estandarización):
+
+𝑍=(𝑋−𝜇)/𝜎
+
+
+P(947 ≤ X ≤ 958) = P(−0.3 ≤ Z ≤ 0.8) = Φ(0.8) − Φ(−0.3) ≈ 0.7881 − 0.3821 = 0.406
+
+Buscar C: P(X < C)=0.8531 → P(Z < z)=0.8531 → z=1.05 → C=950+1.05(10)=960.5
+
+✅ Código en R:
+
+media <- 950; desv_estandar <- 10
+prob_947_958 <- pnorm(958, mean=media, sd=desv_estandar) - pnorm(947, mean=media, sd=desv_estandar)
+valor_c <- qnorm(0.8531, mean=media, sd=desv_estandar)
+
+print(prob_947_958)
+print(valor_c)
+
+
+👉 Truco: Cuando se pide un cuantil, usar qnorm. Cuando se pide probabilidad acumulada, usar pnorm.
+
+
+Semana 9: Distribuciones Multivariadas
+Conceptos Clave
+• Función de Probabilidad Conjunta: p(y1,y2)=P(Y1=y1,Y2=y2)
+• Densidad Conjunta: f(y1,y2) en el caso continuo.
+• Probabilidades marginales: Se obtienen integrando o sumando sobre la otra variable.
+• Independencia: f(y1,y2) = f1(y1) * f2(y2)
+• Valor esperado de g(Y1,Y2): E[g(Y1,Y2)] = ΣΣ g(y1,y2) p(y1,y2)  (discreta), o E[g(Y1,Y2)] = ∫∫ g(y1,y2) f(y1,y2) dy1dy2 (continua).
+
+
+🔹 Semana 9: Distribuciones Multivariadas
+Conceptos Clave
+
+Conjunta: f(y1,y2)
+
+Marginales: integración/suma sobre la otra variable.
+
+Independencia: f(y1,y2)=f1(y1)f2(y2).
+
+Ejemplo Resuelto
+
+📌 Problema: Sea la densidad conjunta
+
+𝑓(𝑦1,𝑦2)=2𝑦1 en el cuadrado unitario [0,1]×[0,1].
+
+
+Calcular el valor esperado E(Y1·Y2).
+
+✅ Planteamiento:
+
+𝐸(𝑌1𝑌2)=∫01∫01(𝑦1⋅𝑦2)(2𝑦1)𝑑𝑦1𝑑𝑦2
+
+E(Y1Y2)=∫01	∫01
+	​
+
+
+
+✅ Resolución manual:
+
+Integral interna: ∫ (2y1^2 y2) dy1 = (2/3)y1^3 y2 |0^1 = (2/3)y2
+
+Integral externa: ∫ (2/3)y2 dy2 = (2/3)(1/2)=1/3
+
+✅ Código en R:
+
+valor_esperado <- 1/3
+print(valor_esperado)
+
+
+👉 Truco: Si las variables son independientes, E(Y1Y2)=E(Y1)E(Y2), lo cual simplifica mucho.
+
+👉 Trucos: Si las variables son independientes, se pueden separar las integrales para simplificar.
