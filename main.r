@@ -5,7 +5,7 @@
 library(gemini.R)
 
 # Asigna tu clave API a una variable de entorno
-Sys.setenv(GEMINI_API_KEY = "AIzaSyBjFAvEl2f8KolPsJwr2Z1ES_nqXLwSEDg")
+Sys.setenv(GEMINI_API_KEY = "AIzaSyBjFAvEl2f8KolPsJwr2Z1ES_nqXLwSEDc")
 
 # Opcional: Verifica que la clave se ha guardado correctamente
 Sys.getenv("GEMINI_API_KEY")
